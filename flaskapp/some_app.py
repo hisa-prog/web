@@ -16,7 +16,7 @@ def hw():
 @app.route("/data_to")
 def data_to():
     # print('1111111')
-    some_pars = {'user': 'Ivan', 'color': 'red'}
+    some_pars = {'user': 'Nastya', 'color': 'red'}
     some_str = 'Hello my dear frend!'
     some_value = 10
     return render_template('simple.html', some_str=some_str,
