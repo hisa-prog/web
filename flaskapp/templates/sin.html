@@ -1,0 +1,31 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+
+{{ wtf.quick_form(form, method='post', enctype="multipart/form-data",action="sin") }}
+
+{% if img_url %}
+<h2>Graph:</h2>
+<img src="{{ img_url }}">
+{% endif %}
+
+{% if selected_output %}
+<h2>Selected output:</h2>
+    <div id="output"></div>
+<script>
+    const dom = document,
+        outputBlock = dom.getElementById('output'),
+        decodeHtmlEntity = function(str) {
+            const txt = dom.createElement('textarea');
+            txt.innerHTML = str;
+            return txt.value;
+        },
+        htmlStr = `{{ selected_output }}`;
+
+    outputBlock.innerHTML =  decodeHtmlEntity(htmlStr);
+    console.log(htmlStr);
+</script>
+{% endif %}
+
+{% endblock %}

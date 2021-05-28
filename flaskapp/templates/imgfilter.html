@@ -1,0 +1,20 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}This is a filter{% endblock %}
+
+{% block content %}
+{{ wtf.quick_form(form, method='post', enctype="multipart/form-data",action="imgfilter" )}}
+
+<h2>Image is here: </h2>
+
+{% if filtered %}
+    <p>{{original}}
+    <p><img src={{original}} class="img-rounded" alt="origin" width = 224 height=224 />
+    <p>{{filtered}}
+    <p><img src={{filtered}} class="img-rounded" alt="median filter" width = 224 height=224 />
+{% else %}
+    <p> There is no image yet </p>
+{% endif %}
+
+{% endblock %}
