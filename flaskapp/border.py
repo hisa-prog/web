@@ -64,7 +64,7 @@ def ind_zad(img, n, frac):
     dst = res.load()
 
     r    = w // 2
-    dist_r = r
+    dist_r = r  
 
     for i in range(0, dist_r):
         rot_ring(adapt(src, w, h, r - i, frac), adapt(dst, w, h, r - i, frac), i * n)
