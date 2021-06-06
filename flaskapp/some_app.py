@@ -370,9 +370,7 @@ def border_r():
         original_path = './flaskapp/static/' + filename
         form.upload.data.save(original_path)
         r = form.pixel_shift.data
-        print(f"{r=}")
-        frac = form.circle_counter.data
-        print(f"{frac=}")
+        frac = form.circle_counter.data 
         original_img = Image.open(original_path)
         filtered_img = something.ind_zad(original_img, r, frac)
 
