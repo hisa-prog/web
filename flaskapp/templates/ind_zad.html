@@ -10,9 +10,10 @@
 
 {% if filtered %}
     <p>{{original}}
-    <p><img src={{original}} class="img-rounded" alt="origin" width = 224 height=224 />
+    <p><img src={{original}} class="img-rounded" alt="origin" width = 500 height=500 />
+    <img src={{graph}} class="img-rounded" alt="origin" width = 500 height=500 />
     <p>{{filtered}}
-    <p><img src={{filtered}} class="img-rounded" alt="median filter" width = 224 height=224 />
+    <p><img src={{filtered}} class="img-rounded" alt="median filter" width = 500 height=500 />
 {% else %}
     <p> There is no image yet </p>
 {% endif %}

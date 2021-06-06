@@ -3,6 +3,8 @@ from flask_bootstrap import Bootstrap
 from flask import Flask
 from PIL import Image
 from pathlib import Path
+from skimage import io
+import matplotlib.pyplot as plt
 import math
 import sys
 
@@ -335,6 +337,20 @@ def imgfilter():
     return render_template('imgfilter.html', form=form, original=original_path, filtered=filtered_path)
 
 
+def create_graph(path, root):
+
+    image = io.imread("D:/Git/web/" + path[1:])
+
+    _ = plt.hist(image.ravel(), bins = 256, color = 'orange', )
+    _ = plt.hist(image[:, :, 0].ravel(), bins = 256, color = 'red', alpha = 0.5)
+    _ = plt.hist(image[:, :, 1].ravel(), bins = 256, color = 'Green', alpha = 0.5)
+    _ = plt.hist(image[:, :, 2].ravel(), bins = 256, color = 'Blue', alpha = 0.5)
+    _ = plt.xlabel('Intensity Value')
+    _ = plt.ylabel('Count')
+    _ = plt.legend(['Total', 'Red_Channel', 'Green_Channel', 'Blue_Channel'])
+    plt.savefig("D:/Git/web/" + root[1:])
+
+
 import border as something
 
 @app.route("/", methods=['GET','POST'])
@@ -343,6 +359,11 @@ def border_r():
     orig_img_path = None
     new_img_path = None
     filename = None
+    chart_orig_img_path = None
+    chart_new_img_path = None
+    
+    
+
     if form.validate_on_submit():
 
         filename = form.upload.data.filename
@@ -359,7 +380,14 @@ def border_r():
         filtered_img.save(filtered_path)
         orig_img_path = '/static/' + filename
         new_img_path = '/static/results/' + filename
-    return render_template('ind_zad.html', form=form, original=orig_img_path, filtered=new_img_path)
+
+        chart_orig = '/flaskapp/static/graph/' + filename
+        chart_filtered = '/flaskapp/static/graphResults/' + filename
+        create_graph(original_path, chart_orig)
+        create_graph(filtered_path, chart_filtered)
+        chart_orig_img_path = '/static/graph/' + filename
+
+    return render_template('ind_zad.html', form=form, original=orig_img_path, filtered=new_img_path, graph=chart_orig_img_path)
 
 
 if __name__ == "__main__":

@@ -3,9 +3,6 @@ import math
 import sys
 
 def val(want, default):
-    """
-    Функция. Принимает 2 значения, если первое не None(пустое), то вернёт его, инече второе
-    """
     if want is None:
         return default
     return want
@@ -67,8 +64,6 @@ def ind_zad(img, n, frac):
     dst = res.load()
 
     r    = w // 2
-    # n    = float(sys.argv[1]) # размер сдвига
-    # frac = float(sys.argv[2]) # количество точек на окружности
     dist_r = r
 
     for i in range(0, dist_r):
