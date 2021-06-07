@@ -36,6 +36,7 @@ from wtforms import StringField, SubmitField, FloatField, SelectField, IntegerFi
 from wtforms.validators import DataRequired
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
+app.config["UPLOAD_FOLDER"] = 'D:/Git/web/flaskapp/static/'
 app.config['RECAPTCHA_USE_SSL'] = False
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6LcXn_sUAAAAAEbvg1fqCMPOA_pgZiVcteIA9wCy'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6LcXn_sUAAAAAPnsHebESwEcexSbONmIPTcIHVPS'
@@ -78,6 +79,12 @@ class BorderForm(FlaskForm):
     # кнопка submit, для пользователя отображена как send
     submit = SubmitField('send')
 
+class NeuroForm(FlaskForm):
+    upload = FileField('Load image', validators=[
+        FileRequired(),
+        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
+    submit = SubmitField('send')
+
 class SinForm(FlaskForm):
     # Фаза
     phase = FloatField('Фаза')
@@ -103,10 +110,10 @@ from werkzeug.utils import secure_filename
 import os
 # подключаем наш модуль и переименовываем
 # для исключения конфликта имен
-#import net as neuronet
+import net as neuronet
 
 
-# метод обработки запроса GET и POST от клиента
+# # метод обработки запроса GET и POST от клиента
 # @app.route("/net", methods=['GET', 'POST'])
 # def net():
 #     # создаем объект формы
@@ -256,58 +263,74 @@ def _calc():
     return render_template('sin.html', form=form, img_url=res_path, selected_output=selected_output)
     
 
-from flask import request
-from flask import Response
-import base64
-from PIL import Image
-from io import BytesIO
-import json
+# from flask import request
+# from flask import Response
+# import base64
+# from PIL import Image
+# from io import BytesIO
+# import json
 
-# метод для обработки запроса от пользователя
-@app.route("/apinet", methods=['GET', 'POST'])
-def apinet():
-    # проверяем что в запросе json данные
-    if request.mimetype == 'application/json':
-        # получаем json данные
-        data = request.get_json()
-        # берем содержимое по ключу, где хранится файл # закодированный строкой base64
-        # декодируем строку в массив байт используя кодировку utf-8
-        # первые 128 байт ascii и utf-8 совпадают, потому можно
-        filebytes = data['imagebin'].encode('utf-8')
-        # декодируем массив байт base64 в исходный файл изображение
-        cfile = base64.b64decode(filebytes)
-        # чтобы считать изображение как файл из памяти используем BytesIO
-        img = Image.open(BytesIO(cfile))
-        decode = neuronet.getresult([img])
-        neurodic = {}
-        for elem in decode:
-            neurodic[elem[0][1]] = str(elem[0][2])
-            print(elem)
-        # пример сохранения переданного файла
-        # handle = open('./static/f.png','wb')
-        # handle.write(cfile)
-        # handle.close()
-    # преобразуем словарь в json строку
-    ret = json.dumps(neurodic)
-    # готовим ответ пользователю
-    resp = Response(response=ret,
-                    status=200,
-                    mimetype="application/json")
-    # возвращаем ответ
-    return resp
+# # метод для обработки запроса от пользователя
+# @app.route("/apinet", methods=['GET', 'POST'])
+# def apinet():
+#     # проверяем что в запросе json данные
+#     if request.mimetype == 'application/json':
+#         # получаем json данные
+#         data = request.get_json()
+#         # берем содержимое по ключу, где хранится файл # закодированный строкой base64
+#         # декодируем строку в массив байт используя кодировку utf-8
+#         # первые 128 байт ascii и utf-8 совпадают, потому можно
+#         filebytes = data['imagebin'].encode('utf-8')
+#         # декодируем массив байт base64 в исходный файл изображение
+#         cfile = base64.b64decode(filebytes)
+#         # чтобы считать изображение как файл из памяти используем BytesIO
+#         img = Image.open(BytesIO(cfile))
+#         decode = neuronet.getresult([img])
+#         neurodic = {}
+#         for elem in decode:
+#             neurodic[elem[0][1]] = str(elem[0][2])
+#             print(elem)
+#         # пример сохранения переданного файла
+#         # handle = open('./static/f.png','wb')
+#         # handle.write(cfile)
+#         # handle.close()
+#     # преобразуем словарь в json строку
+#     ret = json.dumps(neurodic)
+#     # готовим ответ пользователю
+#     resp = Response(response=ret,
+#                     status=200,
+#                     mimetype="application/json")
+#     # возвращаем ответ
+#     return resp
 
-@app.route("/apixml", methods=['GET', 'POST'])
-def apixml():
-    # парсим xml файл в dom
-    dom = ET.parse("./static/xml/file.xml")  # парсим шаблон в dom
-    xslt = ET.parse("./static/xml/file.xslt")  # получаем трансформер
-    transform = ET.XSLT(xslt)
-    # преобразуем xml с помощью трансформера xslt
-    newhtml = transform(dom)
-    # преобразуем из памяти dom в строку, возможно, понадобится указать кодировку
-    strfile = ET.tostring(newhtml)
-    return strfile
+# @app.route("/apixml", methods=['GET', 'POST'])
+# def apixml():
+#     # парсим xml файл в dom
+#     dom = ET.parse("./static/xml/file.xml")  # парсим шаблон в dom
+#     xslt = ET.parse("./static/xml/file.xslt")  # получаем трансформер
+#     transform = ET.XSLT(xslt)
+#     # преобразуем xml с помощью трансформера xslt
+#     newhtml = transform(dom)
+#     # преобразуем из памяти dom в строку, возможно, понадобится указать кодировку
+#     strfile = ET.tostring(newhtml)
+#     return strfile
   
+
+import neuro as neuroset
+from flask import request
+
+@app.route("/neuro", methods=["GET",'POST'])
+def neuro():
+    form = NeuroForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            form.upload.data.save(app.config["UPLOAD_FOLDER"] + 'results/neural_img.png')
+            image = neuroset.neuro(app.config["UPLOAD_FOLDER"] + 'results/neural_img.png')
+            return render_template('neuro.html', form=form, img=app.config["UPLOAD_FOLDER"] + 'results/neural_img.png', neuroset=image)
+    if request.method == "GET":
+        return render_template("neuro.html", form=form)
+
+
 
 import os
 from matplotlib import pyplot as plt

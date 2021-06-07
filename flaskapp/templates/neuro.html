@@ -1,0 +1,18 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}This is a filter{% endblock %}
+
+{% block content %}
+{{ wtf.quick_form(form, method='post', enctype="multipart/form-data",action="/" )}}
+
+<h2>Image is here: </h2>
+
+{% if img %}
+    <p><img src="{{ url_for('static', filename='results/neural_img.png') }}" class="img-rounded" alt="origin" width = 200 height=200 />
+    The neural network believes that this object is: {{neuroset}}
+{% else %}
+    <p> There is no image yet </p>
+{% endif %}
+
+{% endblock %}
